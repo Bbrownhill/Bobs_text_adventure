@@ -3,19 +3,19 @@ import json
 
 class Loader():
 
-    game_content = {}
+    resource_content = {}
 
-    def init():
+    def init(self):
         load(scan())
 
-    def scan():
+    def scan(self):
         files = os.listdir('files')
         return files
 
 
 
-    def load(files):
+    def load(self,files):
         for file in files:
             with open(file) as content:
                 data = json.load(content)
-                game_content['screen_title'] = data['screen_lines']
+                resource_content['screen_title'] = data['screen_lines']
