@@ -23,7 +23,7 @@ class Character():
 
     attributes = {}
 
-    def init(self):
+    def __init__(self):
         pass
 
     def assign_race():

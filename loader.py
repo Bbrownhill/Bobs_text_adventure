@@ -5,7 +5,7 @@ class Loader():
 
     resource_content = {}
 
-    def init(self):
+    def __init__(self):
         load(scan())
 
     def scan(self):
