@@ -1,37 +1,42 @@
-from gamestate import GameState
+
 from loader import Loader
 from resource_manager import ResourceManager, Resource
-from even_manager import EventManager, Event
+from event_manager import events, Event
 
 from pprint import pprint
 
 
 class Director():
 
-    gamestate = GameState()
+    gamestate = "Initalising"
     resource_manager = ResourceManager()
+
 
     def __init__(self):
         pass
 
     def game_loop(self):
-        # handling intilisation outside the main game loop
-        if self.gamestate.state is  "Initalising":
-            self.initialise_game()
-
+        self.resource_manager.current_script = self.load_menu("Main Menu")
+        gamestate = "Running"
         # LOOOOPS!
-        while self.gamestate.state is not "Exiting":
+        while self.gamestate is not "Exiting":
+
             self.execute_game_script(self.resource_manager.current_script)
         else:
             self.exit()
 
-    def initialise_game(self):
-        self.ResourceManager.load_scripts():
+    def load_menu(self, target):
+        return self.resource_manager.fetch_script(target)
 
 
     def execute_game_script(self, script):
-        pprint('executing a script')
-        pprint(script)
+        for line in script.screen_lines:
+            print(line)
+        selection = input()
+        print(selection)
+
+
+
 
 
     def exit(self):

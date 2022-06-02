@@ -1,3 +1,5 @@
 {
-  
+  "type":"character",
+  "subtype": "PC",
+  "resource_title":"Test PC 1"
 }

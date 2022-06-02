@@ -1,4 +1,6 @@
 {
-  "title": "Test Story 1"
+  "type":"script",
+  "subtype": "story",
+  "resource_title":"Test Story 1"
 
 }
