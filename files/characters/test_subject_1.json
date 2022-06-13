@@ -1,5 +1,6 @@
 {
   "type":"character",
   "subtype": "PC",
-  "resource_title":"Test PC 1"
+  "Resource_title":"Test PC 1",
+  "Name": "Jeff"
 }

@@ -1,6 +1,38 @@
 {
-  "type":"script",
-  "subtype": "story",
-  "resource_title":"Test Story 1"
+  "Type": "script",
+  "Subtype": "story",
+  "Resource_title": "Collisions",
+  "Current_Screen": "1",
+  "Screens":[
+    {
+    "Screen_id": "1",
+    "Screen_title": "Introduction_1",
+    "Screen_lines": [
+      "You awaken in a small chamber, Alarms are blaring, and only emergency lights ",
+      "Please select an option"],
+      "Options": [
+        {"Option": "1", "Text": "1. Look around", "Links To": "2"},
+        {"Option": "2", "Text": "2. Go to the door", "Links To": "3"},
+        {"Option": "3", "Text": "3. Help", "Links To": "4"},
+        {"Option": "4", "Text": "4. Exit", "Links To": "Exit"}
+      ]
+    },
+    {
+    "Screen_id": "2",
+    "Screen_title": "Introduction_1",
+    "Screen_lines": [
+      "Looking around the room you see your case with your clothes and other items. ",
+      "Accross the room you see the door closed. Next to your bed the veiwing portal is closed,",
+      "The lock light glows red.",
+      "Please select an option"],
+      "Options": [
+        {"Option": "1", "Text": "1. Go to the door", "Links To": "3"},
+        {"Option": "2", "Text": "2. Check your bag", "Links To": "5"},
+        {"Option": "3", "Text": "3. Help", "Links To": "4"},
+        {"Option": "4", "Text": "4. Exit", "Links To": "Exit"}
+      ]
+    }
+
+  ]
 
 }

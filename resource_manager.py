@@ -33,10 +33,10 @@ class ResourceManager():
             data = json.load(resource_file)
             for k,v in data.items():
                 setattr(resource, k, v)
-        self.resources[resource.resource_title] = resource
+
+        self.resources[resource.Resource_title] = resource
 
     def fetch_script(self, target):
-
         return self.resources.get(target, None)
 
 
