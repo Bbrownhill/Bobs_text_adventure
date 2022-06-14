@@ -1,4 +1,5 @@
 import os
+import json
 
 from loader import Loader
 from resource_manager import ResourceManager, Resource
@@ -10,14 +11,15 @@ from pprint import pprint
 class Director():
 
     gamestate = "Initalising"
+    save_dir = "./saves"
     resource_manager = ResourceManager()
     functions = {}
 
     def __init__(self):
         self.functions = {
             "Exit": self.exit,
-            "Save": "placeholder",
-            "Save and exit": "placeholder",
+            "Save": self.save_game,
+            "Save and exit": self.save_and_exit,
             "New": self.new_game,
             "Load": "placeholder",
             "Conf": "placeholder"
@@ -52,6 +54,7 @@ class Director():
 
         selection = self.select_screen(screen, user_input)
         if selection != None:
+            self.resource_manager.current_script.Previous_Screen = self.resource_manager.current_script.Current_Screen
             self.resource_manager.current_script.Current_Screen = selection
         self.parse_selection(selection)
 
@@ -79,12 +82,20 @@ class Director():
         self.resource_manager.current_script = self.resource_manager.fetch_script("Collisions")
 
     def save_game(self):
-        pass
+        print("Enter a save file name:")
+        save_file_name = input()
+        save_file_content = {
+                             "script" : self.resource_manager.current_script.Resource_title,
+                             "screen" : self.resource_manager.current_script.Previous_Screen
+        }
+        with open(f'{self.save_dir}/{save_file_name}.json', "w") as save_file:
+            json.dump(save_file_content, save_file)
+
 
 
     def save_and_exit(self):
-        save_game()
-        exit()
+        self.save_game()
+        self.exit()
 
     def load_game(self):
         pass

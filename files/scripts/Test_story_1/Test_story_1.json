@@ -3,6 +3,7 @@
   "Subtype": "story",
   "Resource_title": "Collisions",
   "Current_Screen": "1",
+  "Previous_Screen": "1",
   "Screens":[
     {
     "Screen_id": "1",
@@ -14,7 +15,7 @@
         {"Option": "1", "Text": "1. Look around", "Links To": "2"},
         {"Option": "2", "Text": "2. Go to the door", "Links To": "3"},
         {"Option": "3", "Text": "3. Help", "Links To": "4"},
-        {"Option": "4", "Text": "4. Exit", "Links To": "Exit"}
+        {"Option": "4", "Text": "4. Save and Exit", "Links To": "Save and exit"}
       ]
     },
     {
@@ -29,7 +30,20 @@
         {"Option": "1", "Text": "1. Go to the door", "Links To": "3"},
         {"Option": "2", "Text": "2. Check your bag", "Links To": "5"},
         {"Option": "3", "Text": "3. Help", "Links To": "4"},
-        {"Option": "4", "Text": "4. Exit", "Links To": "Exit"}
+        {"Option": "4", "Text": "4. Save and Exit", "Links To": "Save and exit"}
+      ]
+    },
+    {
+    "Screen_id": "3",
+    "Screen_title": "Introduction_1",
+    "Screen_lines": [
+      "You go to the door, the panel doesn't respond, seems the power is out maybe you can force it open?",
+      "Please select an option"],
+      "Options": [
+        {"Option": "1", "Text": "1. Force the door", "Links To": "6"},
+        {"Option": "2", "Text": "2. Look back into the room", "Links To": "2"},
+        {"Option": "3", "Text": "3. Help", "Links To": "4"},
+        {"Option": "4", "Text": "4. Save and Exit", "Links To": "Save and exit"}
       ]
     }
 
