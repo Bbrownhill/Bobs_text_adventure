@@ -14,12 +14,14 @@ class ResourceManager():
     resources_dir = "./files"
     resource_files = []
     resources = {}
+    save_files = []
 
     def __init__(self):
         self.scan()
         for resource in self.resource_files:
             self.load_resource(resource)
         current_script = "Main Menu"
+
 
     def scan(self):
         for root, dirs, files in os.walk(self.resources_dir):
@@ -37,6 +39,9 @@ class ResourceManager():
 
     def fetch_script(self, target):
         return self.resources.get(target, None)
+
+    def load_saves(self, save_dir):
+        pass
 
 
 
