@@ -1,0 +1,14 @@
+{
+    "title" : "Main Menu",
+    "screens" : {
+        "1" : {
+            "id" : "1",
+            "text" : "Welcome to the menu\nPlease choose an option",
+            "choices" : [
+                "1. Start new game",
+                "2. Load Game",
+                "3. Exit"
+            ]
+        }
+    }
+}
