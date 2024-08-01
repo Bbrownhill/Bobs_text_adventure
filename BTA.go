@@ -14,39 +14,39 @@ const stories_path = "stories/"
 var game_state = make(map[string]string)
 var story = make(map[string]Screen)
 
+type Choice struct {
+	Id, Text, Target string
+}
+
 type Screen struct {
-	id, text string
-	choices  []string
+	Id, Text string
+	Choices  map[string]Choice
 }
 
 type Story struct {
-	title   string
-	screens map[string]Screen
+	Title   string
+	Screens map[string]Screen
 }
 
 func main() {
 	// initialization steps
 	// load the menu
-	fmt.Println("Initializing")
 	var menu Story = load(menu_path)
-	fmt.Println("Loaded menu")
-	fmt.Println(menu)
+
 	// set the initial state
-	fmt.Println("Setting up state")
 	var item = make(map[string]string)
 	item["current_story"] = "menu"
 	item["position"] = "1"
 	updatestate(item, false)
-	fmt.Println("State updated")
-	fmt.Println(game_state)
 	// display the menu to the human
-	var current_screen = menu.screens[game_state["position"]]
+	var current_screen = menu.Screens[game_state["position"]]
 	render(current_screen)
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		text := scanner.Text()
-		if text == "exit" {
+		input := scanner.Text()
+
+		if input == "exit" {
 			break // Exit loop if an empty line is entered
 		}
 
@@ -71,15 +71,16 @@ func updatestate(item map[string]string, remove bool) {
 }
 
 func render(screen Screen) {
-	println(screen.text)
-	for c := 0; c < len(screen.choices); c++ {
-		fmt.Println(screen.choices[c])
+	fmt.Println(screen.Text)
+	for _, v := range screen.Choices {
+		fmt.Println(v.Text)
 	}
 }
 
 func load(filename string) Story {
 	file, _ := os.ReadFile(filename)
-	var data Story
+	var data Story // map[string]any
+	// var story Story
 	err := json.Unmarshal(file, &data)
 	if err != nil {
 		log.Printf("Cannot unmarshal the json %d\n", err)
