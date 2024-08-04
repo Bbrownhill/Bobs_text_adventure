@@ -15,7 +15,8 @@ const stories_path = "stories/"
 
 var clear map[string]func() //create a map for storing clear funcs
 var game_state = make(map[string]string)
-var story = make(map[string]Screen)
+var story Story
+var menu Story
 
 type Choice struct {
 	Id, Text, Target string
@@ -31,22 +32,23 @@ type Story struct {
 	Screens map[string]Screen
 }
 
-func main() {
+func init() {
 	// determine what clear screen your OS most likely uses.
 	fetch_os_clear_method()
-	// initialization steps
 	// load the menu
-	var menu Story = load(menu_path)
-
+	menu = load(menu_path)
 	// set the initial state
 	var item = make(map[string]string)
 	item["current_story"] = "menu"
 	item["position"] = "1"
 	updatestate(item, false)
-	// display the menu to the human
+
+}
+
+func main() {
+
 	var current_screen = menu.Screens[game_state["position"]]
 	render(current_screen)
-
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		input := scanner.Text()
@@ -66,10 +68,6 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error:", err)
 	}
-
-}
-
-func init() {
 
 }
 
