@@ -6,11 +6,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
+	"runtime"
 )
 
 const menu_path = "files/menu.json"
 const stories_path = "stories/"
 
+var clear map[string]func() //create a map for storing clear funcs
 var game_state = make(map[string]string)
 var story = make(map[string]Screen)
 
@@ -29,6 +32,8 @@ type Story struct {
 }
 
 func main() {
+	// determine what clear screen your OS most likely uses.
+	fetch_os_clear_method()
 	// initialization steps
 	// load the menu
 	var menu Story = load(menu_path)
@@ -46,15 +51,25 @@ func main() {
 	for scanner.Scan() {
 		input := scanner.Text()
 
-		if input == "exit" {
+		if current_screen.Choices[input].Target == "Exit Game" {
+
 			break // Exit loop if an empty line is entered
 		}
 
+		var next_screen = make(map[string]string)
+		next_screen["position"] = current_screen.Choices[input].Target
+		updatestate(next_screen, false)
+		current_screen = menu.Screens[game_state["position"]]
+		render(current_screen)
 	}
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error:", err)
 	}
+
+}
+
+func init() {
 
 }
 
@@ -71,6 +86,7 @@ func updatestate(item map[string]string, remove bool) {
 }
 
 func render(screen Screen) {
+	CallClear()
 	fmt.Println(screen.Text)
 	for _, v := range screen.Choices {
 		fmt.Println(v.Text)
@@ -86,4 +102,27 @@ func load(filename string) Story {
 		log.Printf("Cannot unmarshal the json %d\n", err)
 	}
 	return data
+}
+
+func fetch_os_clear_method() {
+	clear = make(map[string]func()) //Initialize it
+	clear["linux"] = func() {
+		cmd := exec.Command("clear") //Linux example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+	clear["windows"] = func() {
+		cmd := exec.Command("cmd", "/c", "cls") //Windows example, its tested
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+}
+
+func CallClear() {
+	value, ok := clear[runtime.GOOS] //runtime.GOOS -> linux, windows, darwin etc.
+	if ok {                          //if we defined a clear func for that platform:
+		value() //we execute it
+	} else { //unsupported platform
+		panic("Your platform is unsupported! I can't clear terminal screen :(")
+	}
 }
