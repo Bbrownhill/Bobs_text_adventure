@@ -14,6 +14,7 @@ const menu_path = "files/menu.json"
 const stories_path = "stories/"
 
 var clear map[string]func() //create a map for storing clear funcs
+var special_functions map[string]func()
 var game_state = make(map[string]string)
 var story Story
 var menu Story
@@ -52,15 +53,25 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		input := scanner.Text()
+		val, ok := current_screen.Choices[input]
+		if !ok {
+			// If the player picks an invalid option simply skip the loop
+			// this will result in the player staying on the same screen.
+			fmt.Println("Please select a valid option")
+			continue
+		}
 
-		if current_screen.Choices[input].Target == "Exit Game" {
+		//TO DO
+		// upgrade this to accomodate multiple functions
+		if val.Target == "Exit Game" {
 
 			break // Exit loop if an empty line is entered
 		}
-
+		// prepare an update for the gamestate
 		var next_screen = make(map[string]string)
-		next_screen["position"] = current_screen.Choices[input].Target
+		next_screen["position"] = val.Target
 		updatestate(next_screen, false)
+
 		current_screen = menu.Screens[game_state["position"]]
 		render(current_screen)
 	}
@@ -86,6 +97,7 @@ func updatestate(item map[string]string, remove bool) {
 func render(screen Screen) {
 	CallClear()
 	fmt.Println(screen.Text)
+
 	for _, v := range screen.Choices {
 		fmt.Println(v.Text)
 	}
@@ -121,6 +133,6 @@ func CallClear() {
 	if ok {                          //if we defined a clear func for that platform:
 		value() //we execute it
 	} else { //unsupported platform
-		panic("Your platform is unsupported! I can't clear terminal screen :(")
+		panic("Your platform is unsupported! I can't clear terminal screen")
 	}
 }
