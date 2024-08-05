@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
 )
 
 const menu_path = "files/menu.json"
@@ -98,9 +99,17 @@ func render(screen Screen) {
 	CallClear()
 	fmt.Println(screen.Text)
 
-	for _, v := range screen.Choices {
-		fmt.Println(v.Text)
+	// As Go maps are unordered this code will iterate by Choice ID
+	// this is being done so options always render in the correct order
+	var choice_count = len(screen.Choices)
+	fmt.Println(choice_count)
+	for choice := 1; choice <= choice_count; choice++ {
+		sc := strconv.Itoa(choice)
+		fmt.Println(screen.Choices[sc].Text)
 	}
+	// for _, v := range screen.Choices {
+	// 	fmt.Println(v.Text)
+	// }
 }
 
 func load(filename string) Story {
