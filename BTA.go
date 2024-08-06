@@ -15,10 +15,11 @@ const menu_path = "files/menu.json"
 const stories_path = "stories/"
 
 var clear map[string]func() //create a map for storing clear funcs
-var special_functions map[string]func()
+var special_functions = make(map[string]func())
 var game_state = make(map[string]string)
-var story Story
-var menu Story
+var stories = make(map[string]Story)
+
+// var menu Story
 
 type Choice struct {
 	Id, Text, Target string
@@ -37,19 +38,21 @@ type Story struct {
 func init() {
 	// determine what clear screen your OS most likely uses.
 	fetch_os_clear_method()
+
 	// load the menu
-	menu = load(menu_path)
-	// set the initial state
+	var menu = load(menu_path)
+	stories[menu.Title] = menu
 	var item = make(map[string]string)
-	item["current_story"] = "menu"
+
+	// set the initial state
+	item["current_story"] = menu.Title
 	item["position"] = "1"
 	updatestate(item, false)
-
 }
 
 func main() {
-
-	var current_screen = menu.Screens[game_state["position"]]
+	var current_story = stories[game_state["current_story"]]
+	var current_screen = current_story.Screens[game_state["position"]]
 	render(current_screen)
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -73,7 +76,7 @@ func main() {
 		next_screen["position"] = val.Target
 		updatestate(next_screen, false)
 
-		current_screen = menu.Screens[game_state["position"]]
+		current_screen = current_story.Screens[game_state["position"]]
 		render(current_screen)
 	}
 
@@ -102,20 +105,16 @@ func render(screen Screen) {
 	// As Go maps are unordered this code will iterate by Choice ID
 	// this is being done so options always render in the correct order
 	var choice_count = len(screen.Choices)
-	fmt.Println(choice_count)
 	for choice := 1; choice <= choice_count; choice++ {
-		sc := strconv.Itoa(choice)
+		sc := strconv.Itoa(choice) // convert the int to a string of the int before grabbing the text
 		fmt.Println(screen.Choices[sc].Text)
 	}
-	// for _, v := range screen.Choices {
-	// 	fmt.Println(v.Text)
-	// }
+	// I do this because string(1) returns ascii character 1 and not "1"
 }
 
 func load(filename string) Story {
 	file, _ := os.ReadFile(filename)
-	var data Story // map[string]any
-	// var story Story
+	var data Story
 	err := json.Unmarshal(file, &data)
 	if err != nil {
 		log.Printf("Cannot unmarshal the json %d\n", err)
