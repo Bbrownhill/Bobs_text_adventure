@@ -25,6 +25,7 @@
         "2" : {
             "id" : "2",
             "text" : "Please choose a story",
+            "function" : "Display Stories",
             "choices" : {
                 "1": {
                     "id" : "1",
@@ -36,6 +37,7 @@
         "3" : {
             "id" : "3",
             "text" : "Please choose a save file",
+            "function" : "Display Save files",
             "choices" : {
                 "1": {
                     "id" : "1",

@@ -15,7 +15,7 @@ const menu_path = "files/menu.json"
 const stories_path = "stories/"
 
 var clear map[string]func() //create a map for storing clear funcs
-var special_functions = make(map[string]func())
+var screen_functions = make(map[string]func())
 var game_state = make(map[string]string)
 var stories = make(map[string]Story)
 
@@ -26,8 +26,8 @@ type Choice struct {
 }
 
 type Screen struct {
-	Id, Text string
-	Choices  map[string]Choice
+	Id, Function, Text string
+	Choices            map[string]Choice
 }
 
 type Story struct {
@@ -38,6 +38,8 @@ type Story struct {
 func init() {
 	// determine what clear screen your OS most likely uses.
 	fetch_os_clear_method()
+	screen_functions["Display Stories"] = Display_stories
+	screen_functions["Load Story"] = Load_story
 
 	// load the menu
 	var menu = load(menu_path)
@@ -48,6 +50,16 @@ func init() {
 	item["current_story"] = menu.Title
 	item["position"] = "1"
 	updatestate(item, false)
+
+	//load stories in the stories dir
+	entries, err := os.ReadDir(stories_path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, e := range entries {
+		var story = load(stories_path + e.Name())
+		stories[story.Title] = story
+	}
 }
 
 func main() {
@@ -77,6 +89,12 @@ func main() {
 		updatestate(next_screen, false)
 
 		current_screen = current_story.Screens[game_state["position"]]
+
+		// check if the screen has any functions that need executed.
+		if current_screen.Function != "" {
+			screen_functions[current_screen.Function]()
+		}
+
 		render(current_screen)
 	}
 
@@ -143,4 +161,28 @@ func CallClear() {
 	} else { //unsupported platform
 		panic("Your platform is unsupported! I can't clear terminal screen")
 	}
+}
+
+func Display_stories() {
+	var current_story = stories[game_state["current_story"]]
+	var current_screen = current_story.Screens[game_state["position"]]
+	var index = len(current_screen.Choices) + 1 // I want the index to start one higher than the number of choices
+	for title, _ := range stories {
+		// special case, check if the story is main menu
+		// we don't want to display an option to load the main menu when were already there
+		if title == "Main Menu" {
+			continue
+		}
+		var new_choice = Choice{
+			Id:     strconv.Itoa(index),
+			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), title),
+			Target: fmt.Sprintf("Load Story: %v", title),
+		}
+		current_screen.Choices[strconv.Itoa(index)] = new_choice
+		index++
+	}
+}
+
+func Load_story() {
+
 }
