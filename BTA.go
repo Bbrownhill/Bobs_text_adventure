@@ -40,6 +40,8 @@ func init() {
 	fetch_os_clear_method()
 	screen_functions["Display Stories"] = Display_stories
 	screen_functions["Load Story"] = Load_story
+	screen_functions["Display Save Files"] = Display_Save_files
+	screen_functions["Exit Game"] = Exit_Game
 
 	// load the menu
 	var menu = load(menu_path)
@@ -69,6 +71,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		input := scanner.Text()
+		parse_input(input)
 		val, ok := current_screen.Choices[input]
 		if !ok {
 			// If the player picks an invalid option simply skip the loop
@@ -101,6 +104,9 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error:", err)
 	}
+
+}
+func parse_input(input string) {
 
 }
 
@@ -184,5 +190,14 @@ func Display_stories() {
 }
 
 func Load_story() {
+	game_state["current_story"] = game_state["next_story"]
+	game_state["position"] = "1"
+}
+
+func Display_Save_files() {
+
+}
+
+func Exit_Game() {
 
 }

@@ -37,7 +37,7 @@
         "3" : {
             "id" : "3",
             "text" : "Please choose a save file",
-            "function" : "Display Save files",
+            "function" : "Display Save Files",
             "choices" : {
                 "1": {
                     "id" : "1",
