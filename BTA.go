@@ -40,12 +40,16 @@ type Story struct {
 func init() {
 	// determine what clear screen your OS most likely uses.
 	fetch_os_clear_method()
-	screen_functions["Display Stories"] = Display_stories
-	screen_functions["Load Story"] = Load_story
-	screen_functions["Display Save Files"] = Display_Save_files
+	screen_functions["Display Stories"] = Display_Stories
+	screen_functions["Load Stories"] = Load_Stories
+	screen_functions["Display Save Files"] = Display_Save_Files
 	screen_functions["Exit Game"] = Exit_Game
 
-	target_functions[""] = 
+	target_actions["Load Story"] = Load_Story //start a new story
+	target_actions["Load Game"] = Load_Game   //load a saved game
+	target_actions["Save Game"] = Save_Game   //save a current game
+	target_actions["Exit Game"] = Exit_Game   //exit the game
+	target_actions["Exit Story"] = Exit_Story //exit story, return to menu
 
 	// load the menu
 	var menu = load(menu_path)
@@ -112,13 +116,27 @@ func main() {
 
 }
 
+// primes := [6]int{2, 3, 5, 7, 11, 13}
+
 func execute_target_action(input string) string {
-	numeric_targets, _ := regexp.Compile("[0-9]")  //screen selectors
-	load_story, _ := regexp.Compile("^Load Story") //start a new story
-	exit_game, _ := regexp.Compile("^Exit Game")   //exit the game
-	exit_story, _ := regexp.Compile("^Exit Story") //exit story, return to menu
-	load_game, _ := regexp.Compile("^Load Game")   //load a saved game
-	save_game, _ := regexp.Compile("^Save Game")   //save a current game
+
+	numeric_targets, _ := regexp.Compile("[0-9]")
+	var matchers []regexp.Regexp
+	matchers = append(matchers, *numeric_targets)
+
+	for k, _ := range target_actions {
+
+		new_match, _ := regexp.Compile(fmt.Sprintf("^%v", k)) //Compile a new regex to match each target action key
+		matchers = append(matchers, *new_match)
+	}
+
+	for i, v := range matchers {
+		splitter, _ := regexp.Compile(":")
+		if v.Match([]byte(input)) {
+			target_components := splitter.Split(input, 2)
+			target_actions[target_components[0]](target_components[1])
+		}
+	}
 
 	return ""
 }
@@ -182,7 +200,7 @@ func CallClear() {
 	}
 }
 
-func Display_stories() {
+func Display_Stories() {
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
 	var index = len(current_screen.Choices) + 1 // I want the index to start one higher than the number of choices
@@ -202,12 +220,28 @@ func Display_stories() {
 	}
 }
 
-func Load_story() {
+func Load_Stories() {
 	game_state["current_story"] = game_state["next_story"]
 	game_state["position"] = "1"
 }
 
-func Display_Save_files() {
+func Display_Save_Files() {
+
+}
+
+func Load_Story() {
+
+}
+
+func Load_Game() {
+
+}
+
+func Save_Game() {
+
+}
+
+func Exit_Story() {
 
 }
 
