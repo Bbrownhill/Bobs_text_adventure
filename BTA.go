@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strconv"
 )
@@ -16,6 +17,7 @@ const stories_path = "stories/"
 
 var clear map[string]func() //create a map for storing clear funcs
 var screen_functions = make(map[string]func())
+var target_actions = make(map[string]func())
 var game_state = make(map[string]string)
 var stories = make(map[string]Story)
 
@@ -43,6 +45,8 @@ func init() {
 	screen_functions["Display Save Files"] = Display_Save_files
 	screen_functions["Exit Game"] = Exit_Game
 
+	target_functions[""] = 
+
 	// load the menu
 	var menu = load(menu_path)
 	stories[menu.Title] = menu
@@ -62,16 +66,18 @@ func init() {
 		var story = load(stories_path + e.Name())
 		stories[story.Title] = story
 	}
+	game_state["game_state"] = "Running"
 }
 
 func main() {
+
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
 	render(current_screen)
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		input := scanner.Text()
-		parse_input(input)
+
 		val, ok := current_screen.Choices[input]
 		if !ok {
 			// If the player picks an invalid option simply skip the loop
@@ -79,7 +85,7 @@ func main() {
 			fmt.Println("Please select a valid option")
 			continue
 		}
-
+		execute_target_action(val.Target)
 		//TO DO
 		// upgrade this to accomodate multiple functions
 		if val.Target == "Exit Game" {
@@ -97,7 +103,6 @@ func main() {
 		if current_screen.Function != "" {
 			screen_functions[current_screen.Function]()
 		}
-
 		render(current_screen)
 	}
 
@@ -106,8 +111,16 @@ func main() {
 	}
 
 }
-func parse_input(input string) {
 
+func execute_target_action(input string) string {
+	numeric_targets, _ := regexp.Compile("[0-9]")  //screen selectors
+	load_story, _ := regexp.Compile("^Load Story") //start a new story
+	exit_game, _ := regexp.Compile("^Exit Game")   //exit the game
+	exit_story, _ := regexp.Compile("^Exit Story") //exit story, return to menu
+	load_game, _ := regexp.Compile("^Load Game")   //load a saved game
+	save_game, _ := regexp.Compile("^Save Game")   //save a current game
+
+	return ""
 }
 
 func updatestate(item map[string]string, remove bool) {
