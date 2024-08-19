@@ -8,17 +8,17 @@
                 "1": {
                     "id": "1",
                     "text": "1. Start New Game",
-                    "target": "2"
+                    "target": {"Next Screen": "2" }
                 },
                 "2": {
                     "id": "2",
                     "text": "2. Load Game",
-                    "target": "3"
+                    "target": {"Next Screen": "3" }
                 },
                 "3": {
                     "id": "3",
                     "text": "3. Exit",
-                    "target": "Exit Game"
+                    "target": {"Exit Game": "" }
                 }
             }
         },
@@ -30,7 +30,7 @@
                 "1": {
                     "id" : "1",
                     "text" : "1. Main Menu",
-                    "target" : "1"
+                    "target" : {"Next Screen": "1" }
                 }
             }
         },
@@ -42,7 +42,7 @@
                 "1": {
                     "id" : "1",
                     "text" : "1. Main Menu",
-                    "target" : "1"
+                    "target" : {"Next Screen": "1" }
                 }
             }
         }

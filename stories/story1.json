@@ -4,41 +4,38 @@
         "1" : {
             "id" : "1",
             "text" : "you are standing in a dev room you can go in any of these directions.\nThe walls are a default and bland looking dev texture and the ",
-            "function" : "None",
             "choices" : {
                 "1": {
                     "id": "1",
                     "text": "1. North",
-                    "target": "2"
+                    "target": {"Next Screen": "2" }
                 },
                 "2": {
                     "id": "2",
                     "text": "2. East",
-                    "target": "3"
+                    "target": {"Next Screen": "3" }
                 }
             }
         },
         "2" : {
             "id" : "2",
             "text" : "The north wall",
-            "function" : "None",
             "choices" : {
                 "1": {
                     "id" : "1",
                     "text" : "1. Main Menu",
-                    "target" : "1"
+                    "target" : {"Next Screen": "1" }
                 }
             }
         },
         "3" : {
             "id" : "3",
             "text" : "The east wall",
-            "function" : "None",
             "choices" : {
                 "1": {
                     "id" : "1",
                     "text" : "1. Main Menu",
-                    "target" : "1"
+                    "target" : {"Next Screen": "1" }
                 }
             }
         }
