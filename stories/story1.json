@@ -24,6 +24,11 @@
                     "id": "4",
                     "text": "4. South",
                     "target": {"Next Screen": "5" }
+                },
+                "5":{
+                    "id": "5",
+                    "text": "5. Save game",
+                    "target": {"Save Game": "" }
                 }
             }
         },
@@ -55,6 +60,11 @@
                     "id": "5",
                     "text": "5. Back to the middle",
                     "target": {"Next Screen": "1" }
+                },
+                "6":{
+                    "id": "6",
+                    "text": "6. Save game",
+                    "target": {"Save Game": "" }
                 }
 
             }
@@ -87,6 +97,11 @@
                     "id": "5",
                     "text": "5. Back to the middle",
                     "target": {"Next Screen": "1" }
+                },
+                "6":{
+                    "id": "6",
+                    "text": "6. Save game",
+                    "target": {"Save Game": "" }
                 }
             }
         },
@@ -118,6 +133,11 @@
                     "id": "5",
                     "text": "5. Back to the middle",
                     "target": {"Next Screen": "1" }
+                },
+                "6":{
+                    "id": "6",
+                    "text": "6. Save game",
+                    "target": {"Save Game": "" }
                 }
             }
         },
@@ -149,6 +169,11 @@
                     "id": "5",
                     "text": "5. Back to the middle",
                     "target": {"Next Screen": "1" }
+                },
+                "6":{
+                    "id": "6",
+                    "text": "6. Save game",
+                    "target": {"Save Game": "" }
                 }
             }
         },

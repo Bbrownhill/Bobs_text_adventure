@@ -9,10 +9,13 @@ import (
 	"os/exec"
 	"runtime"
 	"strconv"
+	"strings"
+	"time"
 )
 
 const menu_path = "files/menu.json"
 const stories_path = "stories/"
+const save_dir = "saves/"
 
 var clear map[string]func() //create a map for storing clear funcs
 var screen_functions = make(map[string]func())
@@ -69,7 +72,6 @@ func init() {
 		stories[story.Title] = story
 	}
 	game_state["game_state"] = "Running"
-
 }
 
 func main() {
@@ -214,7 +216,17 @@ func Load_Game(name string) {
 }
 
 func Save_Game(name string) {
-
+	// using date time stamps for save game names for now
+	t := time.Now().Format(time.StampMilli)
+	t = strings.Replace(t, ":", "-", -1) // need to replace : with - so the name is valid
+	content, err := json.Marshal(game_state)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = os.WriteFile(fmt.Sprintf(save_dir+"%v.json", t), content, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func Exit_Game(name string) {
