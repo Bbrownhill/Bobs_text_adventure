@@ -41,9 +41,7 @@ func init() {
 	// determine what clear screen your OS most likely uses.
 	fetch_os_clear_method()
 	screen_functions["Display Stories"] = Display_Stories
-	//screen_functions["Load Stories"] = Load_Stories
 	screen_functions["Display Save Files"] = Display_Save_Files
-	//screen_functions["Exit Game"] = Exit_Game
 
 	target_actions["Next Screen"] = Next_Screen   //Move to the next screen
 	target_actions["Change Story"] = Change_Story //start a new story
@@ -82,9 +80,7 @@ func main() {
 		input := scanner.Text()
 		current_story := stories[game_state["current_story"]]
 		current_screen := current_story.Screens[game_state["position"]]
-		if current_screen.Function != "" {
-			screen_functions[current_screen.Function]()
-		}
+
 		val, ok := current_screen.Choices[input]
 		if !ok {
 			// If the player picks an invalid option simply skip the loop
@@ -124,7 +120,14 @@ func updatestate(item map[string]string, remove bool) {
 
 func render(screen Screen) {
 	CallClear()
+	if screen.Function != "" {
+		screen_functions[screen.Function]()
+	}
 	fmt.Println(screen.Text)
+	// for _, c := range []byte(screen.Text) {
+	// 	time.Sleep(30 * time.Millisecond)
+	// 	fmt.Print(string(c))
+	// }
 
 	// As Go maps are unordered this code will iterate by Choice ID
 	// this is being done so options always render in the correct order
@@ -171,11 +174,10 @@ func CallClear() {
 
 // screen functions
 func Display_Stories() {
-	fmt.Println("calling display stories")
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
 	var index = len(current_screen.Choices) + 1 // I want the index to start one higher than the number of choices
-	for title, _ := range stories {
+	for title := range stories {
 		// special case, check if the story is main menu
 		// we don't want to display an option to load the main menu when were already there
 		if title == "Main Menu" {
@@ -191,27 +193,20 @@ func Display_Stories() {
 	}
 }
 
-func Load_Stories() {
-
-}
-
 func Display_Save_Files() {
 	fmt.Println("calling display stories")
 }
 
 // target functions
 func Next_Screen(screen string) {
-	fmt.Println("running next screen: ", screen)
 	var next_screen = make(map[string]string)
 	next_screen["position"] = screen
 	updatestate(next_screen, false)
 }
 
 func Change_Story(name string) {
-	fmt.Println("running Load story")
 	game_state["current_story"] = name
 	game_state["position"] = "1"
-
 }
 
 func Load_Game(name string) {
@@ -223,5 +218,8 @@ func Save_Game(name string) {
 }
 
 func Exit_Game(name string) {
-
+	// I don't want to cause a panic...
+	CallClear()
+	fmt.Println("Thank you for playing! :)")
+	os.Exit(0)
 }

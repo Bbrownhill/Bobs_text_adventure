@@ -3,7 +3,7 @@
     "screens" : {
         "1" : {
             "id" : "1",
-            "text" : "Welcome to the menu\nPlease choose an option",
+            "text" : "Welcome to the menu\nPlease choose an option\n",
             "choices" : {
                 "1": {
                     "id": "1",
@@ -24,7 +24,7 @@
         },
         "2" : {
             "id" : "2",
-            "text" : "Please choose a story",
+            "text" : "Please choose a story\n",
             "function" : "Display Stories",
             "choices" : {
                 "1": {
@@ -36,7 +36,7 @@
         },
         "3" : {
             "id" : "3",
-            "text" : "Please choose a save file",
+            "text" : "Please choose a save file\n",
             "function" : "Display Save Files",
             "choices" : {
                 "1": {
