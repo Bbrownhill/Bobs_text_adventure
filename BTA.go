@@ -22,7 +22,7 @@ var screen_functions = make(map[string]func())
 var target_actions = make(map[string]func(string))
 var game_state = make(map[string]string)
 var stories = make(map[string]Story)
-var save_files = make(map[int]string)
+var save_files = []string{"Empty slot", "Empty slot", "Empty slot", "Empty slot", "Empty slot"} //setting a limit of 5 save slots for now
 
 // var menu Story
 
@@ -77,8 +77,7 @@ func init() {
 		log.Fatal(err)
 	}
 	for i, s := range saves {
-
-		save_files[i] = s.Name()
+		save_files[i] = save_dir + s.Name()
 	}
 	game_state["game_state"] = "Running"
 }
@@ -187,7 +186,7 @@ func CallClear() {
 func Display_Stories() {
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
-	var index = len(current_screen.Choices) + 1 // I want the index to start one higher than the number of choices
+	var index = 2 // I want the index to start one higher than the number of choices
 	for title := range stories {
 		// special case, check if the story is main menu
 		// we don't want to display an option to load the main menu when were already there
@@ -207,15 +206,12 @@ func Display_Stories() {
 func Display_Save_Files() {
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
-	var index = len(current_screen.Choices) + 1 // I want the index to start one higher than the number of choices
-	for i, save := range save_files {
-		// special case, check if the story is main menu
-		// we don't want to display an option to load the main menu when were already there
-
+	var index = 2 // I want the index to start at two every time
+	for _, save := range save_files {
 		var new_choice = Choice{
 			Id:     strconv.Itoa(index),
 			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), save),
-			Target: map[string]string{"Load Game": save[i]},
+			Target: map[string]string{"Load Game": save},
 		}
 		current_screen.Choices[strconv.Itoa(index)] = new_choice
 		index++
@@ -235,7 +231,11 @@ func Change_Story(name string) {
 }
 
 func Load_Game(name string) {
-
+	file, _ := os.ReadFile(name)
+	err := json.Unmarshal(file, &game_state)
+	if err != nil {
+		log.Printf("Cannot unmarshal the json %d\n", err)
+	}
 }
 
 func Save_Game(name string) {
