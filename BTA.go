@@ -22,6 +22,7 @@ var screen_functions = make(map[string]func())
 var target_actions = make(map[string]func(string))
 var game_state = make(map[string]string)
 var stories = make(map[string]Story)
+var save_files = make(map[int]string)
 
 // var menu Story
 
@@ -70,6 +71,14 @@ func init() {
 	for _, e := range entries {
 		var story = load(stories_path + e.Name())
 		stories[story.Title] = story
+	}
+	saves, err := os.ReadDir(save_dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i, s := range saves {
+
+		save_files[i] = s.Name()
 	}
 	game_state["game_state"] = "Running"
 }
@@ -196,7 +205,21 @@ func Display_Stories() {
 }
 
 func Display_Save_Files() {
-	fmt.Println("calling display stories")
+	var current_story = stories[game_state["current_story"]]
+	var current_screen = current_story.Screens[game_state["position"]]
+	var index = len(current_screen.Choices) + 1 // I want the index to start one higher than the number of choices
+	for i, save := range save_files {
+		// special case, check if the story is main menu
+		// we don't want to display an option to load the main menu when were already there
+
+		var new_choice = Choice{
+			Id:     strconv.Itoa(index),
+			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), save),
+			Target: map[string]string{"Load Game": save[i]},
+		}
+		current_screen.Choices[strconv.Itoa(index)] = new_choice
+		index++
+	}
 }
 
 // target functions
