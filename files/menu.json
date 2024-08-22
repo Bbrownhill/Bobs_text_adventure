@@ -45,6 +45,18 @@
                     "target" : {"Next Screen": "1" }
                 }
             }
+        },
+        "4" : {
+            "id" : "4",
+            "text" : "Please select a slot\n",
+            "function" : {"Display Save Slots" : "" },
+            "choices" : {
+                "1": {
+                    "id" : "1",
+                    "text" : "1. Main Menu",
+                    "target" : {"Next Screen": "1" }
+                }
+            }
         }
     }
 }
