@@ -8,7 +8,7 @@
                 "1": {
                     "id": "1",
                     "text": "1. Start New Game",
-                    "target": {"Next Screen": "2" }
+                    "target": {"Next Screen": "4" }
                 },
                 "2": {
                     "id": "2",
@@ -48,7 +48,7 @@
         },
         "4" : {
             "id" : "4",
-            "text" : "Please select a slot\n",
+            "text" : "Please select a save slot\n",
             "function" : {"Display Save Slots" : "" },
             "choices" : {
                 "1": {

@@ -22,7 +22,7 @@ var screen_functions = make(map[string]func())
 var target_actions = make(map[string]func(string))
 var game_state = make(map[string]string)
 var stories = make(map[string]Story)
-var save_files = []string{"Empty slot", "Empty slot", "Empty slot", "Empty slot", "Empty slot"} //setting a limit of 5 save slots for now
+var save_slots = []string{"Save Slot 1", "Save Slot 2", "Save Slot 3", "Save Slot 4", "Save Slot 5"} //setting a limit of 5 save slots for now
 
 // var menu Story
 
@@ -45,7 +45,8 @@ func init() {
 	// determine what clear screen your OS most likely uses.
 	fetch_os_clear_method()
 	screen_functions["Display Stories"] = Display_Stories
-	screen_functions["Display Save Files"] = Display_Save_Files
+	screen_functions["Display Saved Games"] = Display_Saved_Games
+	screen_functions["Display Save Slots"] = Display_Save_Slots
 
 	target_actions["Next Screen"] = Next_Screen   //Move to the next screen
 	target_actions["Change Story"] = Change_Story //start a new story
@@ -77,7 +78,7 @@ func init() {
 		log.Fatal(err)
 	}
 	for i, s := range saves {
-		save_files[i] = save_dir + s.Name()
+		save_slots[i] = save_dir + s.Name()
 	}
 	game_state["game_state"] = "Running"
 }
@@ -203,15 +204,30 @@ func Display_Stories() {
 	}
 }
 
-func Display_Save_Files() {
+func Display_Saved_Games() {
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
 	var index = 2 // I want the index to start at two every time
-	for _, save := range save_files {
+	for _, save := range save_slots {
 		var new_choice = Choice{
 			Id:     strconv.Itoa(index),
 			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), save),
 			Target: map[string]string{"Load Game": save},
+		}
+		current_screen.Choices[strconv.Itoa(index)] = new_choice
+		index++
+	}
+}
+
+func Display_Save_Slots() {
+	var current_story = stories[game_state["current_story"]]
+	var current_screen = current_story.Screens[game_state["position"]]
+	var index = 2 // I want the index to start at two every time
+	for _, save := range save_slots {
+		var new_choice = Choice{
+			Id:     strconv.Itoa(index),
+			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), save),
+			Target: map[string]string{"Select Slot": save},
 		}
 		current_screen.Choices[strconv.Itoa(index)] = new_choice
 		index++
@@ -253,8 +269,9 @@ func Save_Game(name string) {
 }
 
 func Exit_Game(name string) {
-	// I don't want to cause a panic...
+
 	CallClear()
 	fmt.Println("Thank you for playing! :)")
+	// I don't want to cause a panic...
 	os.Exit(0)
 }
