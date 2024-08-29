@@ -49,7 +49,7 @@
         "4" : {
             "id" : "4",
             "text" : "Please select a save slot\n",
-            "function" : {"Display Save Slots" : "" },
+            "function" : "Display Save Slots",
             "choices" : {
                 "1": {
                     "id" : "1",

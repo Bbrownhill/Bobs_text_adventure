@@ -49,6 +49,7 @@ func init() {
 	screen_functions["Display Save Slots"] = Display_Save_Slots
 
 	target_actions["Next Screen"] = Next_Screen   //Move to the next screen
+	target_actions["Select Slot"] = Select_Slot   //choose a save slot for the game
 	target_actions["Change Story"] = Change_Story //start a new story
 	target_actions["Load Game"] = Load_Game       //load a saved game
 	target_actions["Save Game"] = Save_Game       //save a current game
@@ -73,12 +74,13 @@ func init() {
 		var story = load(stories_path + e.Name())
 		stories[story.Title] = story
 	}
+	//load the save slots
 	saves, err := os.ReadDir(save_dir)
 	if err != nil {
 		log.Fatal(err)
 	}
 	for i, s := range saves {
-		save_slots[i] = save_dir + s.Name()
+		save_slots[i] = s.Name()
 	}
 	game_state["game_state"] = "Running"
 }
@@ -132,6 +134,7 @@ func updatestate(item map[string]string, remove bool) {
 func render(screen Screen) {
 	CallClear()
 	if screen.Function != "" {
+		fmt.Println(screen, screen.Function)
 		screen_functions[screen.Function]()
 	}
 	fmt.Println(screen.Text)
@@ -252,6 +255,12 @@ func Load_Game(name string) {
 	if err != nil {
 		log.Printf("Cannot unmarshal the json %d\n", err)
 	}
+}
+
+func Select_Slot(slot string) {
+	game_state["save_slot"] = slot //set the save slot in the game state
+	Next_Screen("2")               // call the next screen for choosing a story
+
 }
 
 func Save_Game(name string) {
