@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const menu_path = "files/menu.json"
@@ -133,6 +134,7 @@ func updatestate(item map[string]string, remove bool) {
 func render(screen Screen) {
 	CallClear()
 	if screen.Function != "" {
+
 		screen_functions[screen.Function]()
 	}
 	fmt.Println(screen.Text)
@@ -225,10 +227,15 @@ func Display_Save_Slots() {
 	var current_screen = current_story.Screens[game_state["position"]]
 	var index = 2 // I want the index to start at two every time
 	for _, save := range save_slots {
+		file, _ := os.ReadFile(fmt.Sprintf("%v%v"))
+		err := json.Unmarshal(file, &game_state)
+		if err != nil {
+			log.Printf("Cannot unmarshal the json %d\n", err)
+		}
 		sans_ext := strings.TrimSuffix(save, ".json")
 		var new_choice = Choice{
 			Id:     strconv.Itoa(index),
-			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), sans_ext),
+			Text:   fmt.Sprintf("%v. %v : %v - %v", strconv.Itoa(index), sans_ext, "story", "time"),
 			Target: map[string]string{"Select Slot": save},
 		}
 		current_screen.Choices[strconv.Itoa(index)] = new_choice
@@ -264,13 +271,14 @@ func Select_Slot(slot string) {
 
 func Save_Game(name string) {
 	// using date time stamps for save game names for now
-	// t := time.Now().Format(time.StampMilli)
-	// t = strings.Replace(t, ":", "-", -1) // need to replace : with - so the name is valid
+	t := time.Now().Format(time.StampMilli)
+	t = strings.Replace(t, ":", "-", -1) // need to replace : with - so the name is valid
+	game_state["save_time"] = t
 	content, err := json.Marshal(game_state)
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = os.WriteFile(fmt.Sprintf(save_dir+"%v.json", game_state["save_slot"]), content, 0644)
+	err = os.WriteFile(fmt.Sprintf(save_dir+"%v", game_state["save_slot"]), content, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
