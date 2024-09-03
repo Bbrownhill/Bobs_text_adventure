@@ -211,11 +211,22 @@ func Display_Saved_Games() {
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
 	var index = 2 // I want the index to start at two every time
-	for _, save := range save_slots {
+	for _, save_file := range save_slots {
+		game_save := make(map[string]string)
+		file, _ := os.ReadFile(fmt.Sprintf("%v%v", save_dir, save_file))
+		err := json.Unmarshal(file, &game_save)
+		if err != nil {
+			log.Printf("Cannot unmarshal the json %d\n", err)
+		}
+		_, ok := game_save["current_story"]
+		if !ok {
+			continue
+		}
+		sans_ext := strings.TrimSuffix(save_file, ".json")
 		var new_choice = Choice{
 			Id:     strconv.Itoa(index),
-			Text:   fmt.Sprintf("%v. %v", strconv.Itoa(index), save),
-			Target: map[string]string{"Load Game": save},
+			Text:   fmt.Sprintf("%v. %v : %v - %v", strconv.Itoa(index), sans_ext, game_save["current_story"], game_save["save_time"]),
+			Target: map[string]string{"Load Game": save_file},
 		}
 		current_screen.Choices[strconv.Itoa(index)] = new_choice
 		index++
@@ -226,17 +237,18 @@ func Display_Save_Slots() {
 	var current_story = stories[game_state["current_story"]]
 	var current_screen = current_story.Screens[game_state["position"]]
 	var index = 2 // I want the index to start at two every time
-	for _, save := range save_slots {
-		file, _ := os.ReadFile(fmt.Sprintf("%v%v"))
-		err := json.Unmarshal(file, &game_state)
+	for _, save_file := range save_slots {
+		game_save := make(map[string]string)
+		file, _ := os.ReadFile(fmt.Sprintf("%v%v", save_dir, save_file))
+		err := json.Unmarshal(file, &game_save)
 		if err != nil {
 			log.Printf("Cannot unmarshal the json %d\n", err)
 		}
-		sans_ext := strings.TrimSuffix(save, ".json")
+		sans_ext := strings.TrimSuffix(save_file, ".json")
 		var new_choice = Choice{
 			Id:     strconv.Itoa(index),
-			Text:   fmt.Sprintf("%v. %v : %v - %v", strconv.Itoa(index), sans_ext, "story", "time"),
-			Target: map[string]string{"Select Slot": save},
+			Text:   fmt.Sprintf("%v. %v : %v - %v", strconv.Itoa(index), sans_ext, game_save["current_story"], game_save["save_time"]),
+			Target: map[string]string{"Select Slot": save_file},
 		}
 		current_screen.Choices[strconv.Itoa(index)] = new_choice
 		index++
@@ -256,7 +268,7 @@ func Change_Story(name string) {
 }
 
 func Load_Game(name string) {
-	file, _ := os.ReadFile(name)
+	file, _ := os.ReadFile(save_dir + name)
 	err := json.Unmarshal(file, &game_state)
 	if err != nil {
 		log.Printf("Cannot unmarshal the json %d\n", err)
