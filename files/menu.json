@@ -3,7 +3,10 @@
     "screens" : {
         "1" : {
             "id" : "1",
-            "text" : "Welcome to the menu\nPlease choose an option\n",
+            "text" : [
+                    "Welcome to the menu\n",
+                    "Please choose an option\n"
+                ],
             "choices" : {
                 "1": {
                     "id": "1",
@@ -24,7 +27,7 @@
         },
         "2" : {
             "id" : "2",
-            "text" : "Please choose a story\n",
+            "text" : ["Please choose a story\n"],
             "function" : "Display Stories",
             "choices" : {
                 "1": {
@@ -36,7 +39,7 @@
         },
         "3" : {
             "id" : "3",
-            "text" : "Please choose a save file\n",
+            "text" : ["Please choose a save file\n"],
             "function" : "Display Saved Games",
             "choices" : {
                 "1": {
@@ -48,7 +51,7 @@
         },
         "4" : {
             "id" : "4",
-            "text" : "Please select a save slot\n",
+            "text" : ["Please select a save slot\n"],
             "function" : "Display Save Slots",
             "choices" : {
                 "1": {

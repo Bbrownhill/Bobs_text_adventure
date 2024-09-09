@@ -32,8 +32,9 @@ type Choice struct {
 }
 
 type Screen struct {
-	Id, Function, Text string
-	Choices            map[string]Choice
+	Id, Function string
+	Text         []string
+	Choices      map[string]Choice
 }
 
 type Story struct {
@@ -137,7 +138,9 @@ func render(screen Screen) {
 
 		screen_functions[screen.Function]()
 	}
-	fmt.Println(screen.Text)
+	for _, line := range screen.Text {
+		fmt.Println(line)
+	}
 	// for _, c := range []byte(screen.Text) {
 	// 	time.Sleep(30 * time.Millisecond)
 	// 	fmt.Print(string(c))
@@ -145,6 +148,7 @@ func render(screen Screen) {
 
 	// As Go maps are unordered this code will iterate by Choice ID
 	// this is being done so options always render in the correct order
+
 	var choice_count = len(screen.Choices)
 	for choice := 1; choice <= choice_count; choice++ {
 		sc := strconv.Itoa(choice) // convert the int to a string of the int before grabbing the text

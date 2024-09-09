@@ -3,7 +3,8 @@
     "screens" : {
         "1" : {
             "id" : "1",
-            "text" : "you are standing in a dev room you can go in any of these directions.\nThe walls are a default and bland looking dev texture and the lighting is full bright\n ",
+            "text" : ["you are standing in a dev room you can go in any of these directions.\n",
+                "The walls are a default and bland looking dev texture and the lighting is full bright\n "],
             "choices" : {
                 "1": {
                     "id": "1",
@@ -34,7 +35,8 @@
         },
         "2" : {
             "id" : "2",
-            "text" : "The north wall, looks even blander upclose.\nHowever there is a button with a little light above it.\n",
+            "text" : ["The north wall, looks even blander upclose.\n",
+                "However there is a button with a little light above it.\n"],
             "choices" : {
                 "1": {
                     "id" : "1",
@@ -71,7 +73,7 @@
         },
         "3" : {
             "id" : "3",
-            "text" : "The east wall seems to be at a different resolution to the north wall and you can see the square pattern repeat more often,\nThere is a key on a hook on this wall.\n",
+            "text" : ["The east wall seems to be at a different resolution to the north wall and you can see the square pattern repeat more often,\nThere is a key on a hook on this wall.\n"],
             "choices" : {
                 "1": {
                     "id" : "1",
@@ -107,7 +109,7 @@
         },
         "4" : {
             "id" : "4",
-            "text" : "The west wall has the same texture as the north wall but it's orange.\nThere are no other features here.\n",
+            "text" : ["The west wall has the same texture as the north wall but it's orange.\nThere are no other features here.\n"],
             "choices" : {
                 "1": {
                     "id" : "1",
@@ -143,7 +145,7 @@
         },
         "5" : {
             "id" : "5",
-            "text" : "The south wall has a door in it which appears to be locked.\nPerhaps it needs a key.\n",
+            "text" : ["The south wall has a door in it which appears to be locked.\nPerhaps it needs a key.\n"],
             "choices" : {
                 "1": {
                     "id" : "1",
@@ -179,7 +181,7 @@
         },
         "6" : {
             "id" : "6",
-            "text" : "Congratulations you have completed the dev room!\n",
+            "text" : ["Congratulations you have completed the dev room!\n"],
             "choices" : {
                 "1": {
                     "id" : "1",
