@@ -4,7 +4,7 @@
         "1" : {
             "id" : "1",
             "text" : [
-                    "Welcome to the menu\n",
+                    "{colour:red}Welcome to the menu\n",
                     "Please choose an option\n"
                 ],
             "choices" : {

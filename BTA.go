@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
@@ -17,12 +18,26 @@ const menu_path = "files/menu.json"
 const stories_path = "stories/"
 const save_dir = "saves/"
 
+// regex's for parsing inline functions
+var reg = regexp.MustCompile("{.*}")
+
 var clear map[string]func() //create a map for storing clear funcs
 var screen_functions = make(map[string]func())
 var target_actions = make(map[string]func(string))
 var game_state = make(map[string]string)
 var stories = make(map[string]Story)
 var save_slots = []string{"Save Slot 1", "Save Slot 2", "Save Slot 3", "Save Slot 4", "Save Slot 5"} //setting a limit of 5 save slots for now
+
+// basic ANSI colours
+var Reset = "\033[0m"
+var Red = "\033[31m"
+var Green = "\033[32m"
+var Yellow = "\033[33m"
+var Blue = "\033[34m"
+var Magenta = "\033[35m"
+var Cyan = "\033[36m"
+var Gray = "\033[37m"
+var White = "\033[97m"
 
 // var menu Story
 
@@ -139,6 +154,7 @@ func render(screen Screen) {
 		screen_functions[screen.Function]()
 	}
 	for _, line := range screen.Text {
+
 		fmt.Println(line)
 	}
 	// for _, c := range []byte(screen.Text) {
@@ -148,7 +164,6 @@ func render(screen Screen) {
 
 	// As Go maps are unordered this code will iterate by Choice ID
 	// this is being done so options always render in the correct order
-
 	var choice_count = len(screen.Choices)
 	for choice := 1; choice <= choice_count; choice++ {
 		sc := strconv.Itoa(choice) // convert the int to a string of the int before grabbing the text
@@ -303,7 +318,7 @@ func Save_Game(name string) {
 func Exit_Game(name string) {
 
 	CallClear()
-	fmt.Println("Thank you for playing! :)")
+	fmt.Println(Reset + "Thank you for playing! :)")
 	// I don't want to cause a panic...
 	os.Exit(0)
 }
