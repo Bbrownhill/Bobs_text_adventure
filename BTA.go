@@ -19,7 +19,8 @@ const stories_path = "stories/"
 const save_dir = "saves/"
 
 // regex's for parsing inline functions
-var reg = regexp.MustCompile("{.*}")
+
+var reg = regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`)
 
 var clear map[string]func() //create a map for storing clear funcs
 var screen_functions = make(map[string]func())
@@ -28,18 +29,17 @@ var game_state = make(map[string]string)
 var stories = make(map[string]Story)
 var save_slots = []string{"Save Slot 1", "Save Slot 2", "Save Slot 3", "Save Slot 4", "Save Slot 5"} //setting a limit of 5 save slots for now
 
-// basic ANSI colours
-var Reset = "\033[0m"
-var Red = "\033[31m"
-var Green = "\033[32m"
-var Yellow = "\033[33m"
-var Blue = "\033[34m"
-var Magenta = "\033[35m"
-var Cyan = "\033[36m"
-var Gray = "\033[37m"
-var White = "\033[97m"
-
-// var menu Story
+var ANSI_Codes = map[string]string{
+	"Reset":   "\033[0m",
+	"Red":     "\033[31m",
+	"Green":   "\033[32m",
+	"Yellow":  "\033[33m",
+	"Blue":    "\033[34m",
+	"Magenta": "\033[35m",
+	"Cyan":    "\033[36m",
+	"Gray":    "\033[37m",
+	"White":   "\033[97m",
+}
 
 type Choice struct {
 	Id, Text string
@@ -149,18 +149,26 @@ func updatestate(item map[string]string, remove bool) {
 
 func render(screen Screen) {
 	CallClear()
+	reg1 := regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`)
+	reg2 := regexp.MustCompile(`\{(.*)\}`)
 	if screen.Function != "" {
 
 		screen_functions[screen.Function]()
 	}
 	for _, line := range screen.Text {
+		formatted_text := ""
 
-		fmt.Println(line)
+		blocks := reg1.FindAllStringSubmatch(line, -1)
+		for _, match := range blocks {
+			fmt_check := reg2.FindStringSubmatch(match[0])
+			if len(fmt_check) > 0 { //if this is a formatting command look up the ANSI code and insert that instead of the normal text
+				formatted_text += ANSI_Codes[fmt_check[1]]
+			} else {
+				formatted_text += match[1]
+			}
+		}
+		fmt.Println(formatted_text + ANSI_Codes["Reset"])
 	}
-	// for _, c := range []byte(screen.Text) {
-	// 	time.Sleep(30 * time.Millisecond)
-	// 	fmt.Print(string(c))
-	// }
 
 	// As Go maps are unordered this code will iterate by Choice ID
 	// this is being done so options always render in the correct order
@@ -318,7 +326,7 @@ func Save_Game(name string) {
 func Exit_Game(name string) {
 
 	CallClear()
-	fmt.Println(Reset + "Thank you for playing! :)")
+	fmt.Println(ANSI_Codes["Reset"] + "Thank you for playing! :)")
 	// I don't want to cause a panic...
 	os.Exit(0)
 }
