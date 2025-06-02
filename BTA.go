@@ -17,10 +17,34 @@ import (
 const menu_path = "files/menu.json"
 const stories_path = "stories/"
 const save_dir = "saves/"
-
-// regex's for parsing inline functions
-
-var reg = regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`)
+var ANSI_Codes = map[string]string{
+	"Reset" : "\033[0m",
+	"Black" : "\033[30m",
+	"Red" : "\033[31m",
+	"Green" : "\033[32m",
+	"Yellow" : "\033[33m",
+	"Blue" : "\033[34m",
+	"Magenta" : "\033[35m",
+	"Cyan" : "\033[36m",
+	"White" : "\033[37m",
+	"Bold" : "\033[1m",
+	"BoldBlack" : "\033[1;30m",
+	"BoldRed" : "\033[1;31m",
+	"BoldGreen" : "\033[1;32m",
+	"BoldYellow" : "\033[1;33m",
+	"BoldBlue" : "\033[1;34m",
+	"BoldMagenta" : "\033[1;35m",
+	"BoldCyan" : "\033[1;36m",
+	"Faint" : "\033[2m",
+	"FaintBlack" : "\033[2;30m",
+	"FaintRed" : "\033[2;31m",
+	"FaintGreen" : "\033[2;32m",
+	"FaintYellow" : "\033[2;33m",
+	"FaintBlue" : "\033[2;34m",
+	"FaintMagenta" : "\033[2;35m",
+	"FaintCyan" : "\033[2;36m",
+	"FaintWhite" : "\033[2;37m",
+}
 
 var clear map[string]func() //create a map for storing clear funcs
 var screen_functions = make(map[string]func())
@@ -29,17 +53,6 @@ var game_state = make(map[string]string)
 var stories = make(map[string]Story)
 var save_slots = []string{"Save Slot 1", "Save Slot 2", "Save Slot 3", "Save Slot 4", "Save Slot 5"} //setting a limit of 5 save slots for now
 
-var ANSI_Codes = map[string]string{
-	"Reset":   "\033[0m",
-	"Red":     "\033[31m",
-	"Green":   "\033[32m",
-	"Yellow":  "\033[33m",
-	"Blue":    "\033[34m",
-	"Magenta": "\033[35m",
-	"Cyan":    "\033[36m",
-	"Gray":    "\033[37m",
-	"White":   "\033[97m",
-}
 
 type Choice struct {
 	Id, Text string
@@ -63,6 +76,7 @@ func init() {
 	screen_functions["Display Stories"] = Display_Stories
 	screen_functions["Display Saved Games"] = Display_Saved_Games
 	screen_functions["Display Save Slots"] = Display_Save_Slots
+	screen_functions["Update Game State"] = Update_Game_State
 
 	target_actions["Next Screen"] = Next_Screen   //Move to the next screen
 	target_actions["Select Slot"] = Select_Slot   //choose a save slot for the game
@@ -149,8 +163,8 @@ func updatestate(item map[string]string, remove bool) {
 
 func render(screen Screen) {
 	CallClear()
-	reg1 := regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`)
-	reg2 := regexp.MustCompile(`\{(.*)\}`)
+	reg1 := regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`) //break up the line into a list of blocks
+	reg2 := regexp.MustCompile(`\{(.*)\}`) //check if a block is a formatting command or plain text
 	if screen.Function != "" {
 
 		screen_functions[screen.Function]()
@@ -282,7 +296,15 @@ func Display_Save_Slots() {
 	}
 }
 
+func Check_Game_State() {
+
+}
+
 // target functions
+func Update_Game_State() {
+	
+}
+
 func Next_Screen(screen string) {
 	var next_screen = make(map[string]string)
 	next_screen["position"] = screen

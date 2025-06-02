@@ -73,12 +73,15 @@
         },
         "3" : {
             "id" : "3",
-            "text" : ["The east wall seems to be at a different resolution to the north wall and you can see the square pattern repeat more often,\nThere is a key on a hook on this wall.\n"],
+            "text" : ["The east wall seems to be at a different resolution to the north wall and you can see the square pattern repeat more often",
+            "<Has_key:false>, There is a key on a hook on this wall.\n",
+            "<Has_key:true>."],
             "choices" : {
                 "1": {
                     "id" : "1",
                     "text" : "1. Take the key",
-                    "target" : {"Next Screen": "1" }
+                    "target" : {"Next Screen": "1" },
+                    "condition" : "Has_key"
                 },
                 "2": {
                     "id": "2",
