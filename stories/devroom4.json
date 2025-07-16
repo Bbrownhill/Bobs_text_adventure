@@ -81,7 +81,7 @@
                     "id" : "1",
                     "text" : "1. Take the key",
                     "target" : {"Next Screen": "1" },
-                    "condition" : "Has_key"
+                    "state_update" : "Has_key:true"
                 },
                 "2": {
                     "id": "2",

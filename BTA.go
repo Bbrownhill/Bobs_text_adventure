@@ -163,8 +163,8 @@ func updatestate(item map[string]string, remove bool) {
 
 func render(screen Screen) {
 	CallClear()
-	reg1 := regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`) //break up the line into a list of blocks
-	reg2 := regexp.MustCompile(`\{(.*)\}`) //check if a block is a formatting command or plain text
+	separator := regexp.MustCompile(`(?:\{[^}]*\})|([^{}]+)`) //break up the line into a list of blocks
+	formatting := regexp.MustCompile(`\{(.*)\}`) //check if a block is a formatting command or plain text
 	if screen.Function != "" {
 
 		screen_functions[screen.Function]()
@@ -172,9 +172,9 @@ func render(screen Screen) {
 	for _, line := range screen.Text {
 		formatted_text := ""
 
-		blocks := reg1.FindAllStringSubmatch(line, -1)
+		blocks := separator.FindAllStringSubmatch(line, -1)
 		for _, match := range blocks {
-			fmt_check := reg2.FindStringSubmatch(match[0])
+			fmt_check := formatting.FindStringSubmatch(match[0])
 			if len(fmt_check) > 0 { //if this is a formatting command look up the ANSI code and insert that instead of the normal text
 				formatted_text += ANSI_Codes[fmt_check[1]]
 			} else {
